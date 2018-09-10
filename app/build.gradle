@@ -1,0 +1,145 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'org.greenrobot.greendao'
+
+static def gitSha() {
+    return 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+}
+
+static def currentDate() {
+    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
+}
+
+static def currentTime() {
+    return new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
+}
+
+def APP_NAME = "Formwork"
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    defaultConfig {
+        applicationId "com.csp.formwork"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        flavorDimensions "applicationId"
+        resValue "string", "app_name", "${APP_NAME}"
+    }
+
+    signingConfigs {
+        // staging.initWith(signingConfigs.debug)
+
+        debug {
+            storeFile file(KEY_APP_STOREFILE_DEBUG)
+            storePassword KEY_STORE_PASSWORD_DEBUG
+            keyAlias KEY_ALIAS_DEBUG
+            keyPassword KEY_PASSWORD_DEBUG
+        }
+
+        release {
+            storeFile file(KEY_APP_STOREFILE_RELEASE)
+            storePassword KEY_STORE_PASSWORD_RELEASE
+            keyAlias KEY_ALIAS_RELEASE
+            keyPassword KEY_PASSWORD_RELEASE
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility rootProject.ext.sourceCompatibilityVersion
+        targetCompatibility rootProject.ext.targetCompatibilityVersion
+    }
+
+    productFlavors {
+        publish {
+        }
+
+        dev {
+            applicationIdSuffix ".dev"
+        }
+
+        // dpub {
+        // }
+
+        // p1 {
+        // }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            zipAlignEnabled false
+            shrinkResources false
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "boolean", "IS_RELEASE", "false"
+        }
+
+        release {
+            signingConfig signingConfigs.release
+            zipAlignEnabled true
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+            buildConfigField "boolean", "IS_RELEASE", "true"
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "app-${variant.flavorName}-${variant.buildType.name}.apk"
+        }
+
+        buildConfigField "boolean", "IS_DEV", "${(variant.flavorName == "dev")}"
+
+        switch (variant.flavorName) {
+            case "dev":
+            case "dpub":
+                resValue "string", "app_name", "${APP_NAME}(D${variant.flavorName.substring(1)})"
+                buildConfigField "boolean", "IS_DEBUGGABLE", "true"
+                break
+            default:
+                if (variant.buildType.name == "debug") {
+                    resValue "string", "app_name", "${APP_NAME}(Debug)"
+                    buildConfigField "boolean", "IS_DEBUGGABLE", "true"
+                } else {
+                    buildConfigField "boolean", "IS_DEBUGGABLE", "false"
+                }
+                break
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+}
+
+//greendao {
+//    schemaVersion 2
+//    daoPackage '${applicationId}.database.dao'
+//    targetGenDir 'src/main/java'
+//}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':libutil')
+    implementation project(':libwidget')
+
+    implementation dep.supportV7
+    implementation dep.supportConstraintLayout
+    implementation dep.supportRecyclerviewV7
+
+    implementation dep.butterknife
+    annotationProcessor dep.butterknifeCompiler
+
+//    implementation dep.greendao
+
+    // testImplementation 'junit:junit:4.12'
+    // androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    // androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
