@@ -58,12 +58,6 @@ android {
         dev {
             applicationIdSuffix ".dev"
         }
-
-        // dpub {
-        // }
-
-        // p1 {
-        // }
     }
 
     buildTypes {
