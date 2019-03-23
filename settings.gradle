@@ -1,1 +1,3 @@
-include ':app', ':libutil', ':libwidget'
+include ':app'
+include ':lib-util', ':lib-widget'
+include ':lib-recyclerview-adapter'

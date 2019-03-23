@@ -121,16 +121,22 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation project(':libutil')
-    implementation project(':libwidget')
+    // android
+    implementation dep.support_appcompat_v7
+    implementation dep.support_constraint_layout
+    implementation dep.support_recyclerview_v7
 
-    implementation dep.supportV7
-    implementation dep.supportConstraintLayout
-    implementation dep.supportRecyclerviewV7
+    // google
 
-    implementation dep.butterknife
-    annotationProcessor dep.butterknifeCompiler
+    // library
+    implementation project(':lib-util')
+    implementation project(':lib-widget')
 
+    // 开发工具
+    implementation 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    // 其他
 //    implementation dep.greendao
 
     // testImplementation 'junit:junit:4.12'

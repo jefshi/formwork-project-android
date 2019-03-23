@@ -1,7 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-apply from: rootProject.file('gradle/dependencies.gradle')
-
 buildscript {
 
     repositories {
@@ -9,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.3.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -27,3 +25,48 @@ task clean(type: Delete) {
     delete rootProject.buildDir
 }
 
+ext {
+    compileSdkVersion = 28
+    // buildToolsVersion = '27.0.3'
+    minSdkVersion = 19
+    targetSdkVersion = 28
+
+    sourceCompatibilityVersion = JavaVersion.VERSION_1_8
+    targetCompatibilityVersion = JavaVersion.VERSION_1_8
+    supportLibrariesVersion = '28.0.0'
+
+    dep = [
+            // test
+            junit                  : 'junit:junit:4.12',
+
+            // support library
+            support_v4                : "com.android.support:support-v4:$supportLibrariesVersion",
+            support_appcompat_v7      : "com.android.support:appcompat-v7:$supportLibrariesVersion",
+            support_annotations       : "com.android.support:support-annotations:$supportLibrariesVersion",
+            support_design            : "com.android.support:design:$supportLibrariesVersion",
+
+            // support view
+            support_cardview          : "com.android.support:cardview-v7:$supportLibrariesVersion",
+            support_constraint_layout : "com.android.support.constraint:constraint-layout:1.0.2",
+            support_recyclerview_v7    : "com.android.support:recyclerview-v7:$supportLibrariesVersion",
+
+            // common library
+            butterknife            : 'com.jakewharton:butterknife:8.8.1',
+            butterknifeCompiler    : 'com.jakewharton:butterknife-compiler:8.8.1',
+
+            eventbus               : 'org.greenrobot:eventbus:3.1.1',
+            greendao               : 'org.greenrobot:greendao:3.2.0',
+
+            rxandroid              : 'io.reactivex.rxjava2:rxandroid:2.0.1',
+            rxjava                 : 'io.reactivex.rxjava2:rxjava:2.1.0',
+
+            okhttp                 : "com.squareup.okhttp3:okhttp:3.9.1",
+            okhttpLoggin           : 'com.squareup.okhttp3:logging-interceptor:3.9.1',
+
+            retrofit               : 'com.squareup.retrofit2:retrofit:2.3.0',
+            retrofitConverterGson  : 'com.squareup.retrofit2:converter-gson:2.3.0',
+            retrofitAdapterRxjava  : 'com.squareup.retrofit2:adapter-rxjava2:2.3.0',
+
+            stringfog              : 'com.github.megatronking.stringfog:lib:1.2.2',
+    ]
+}
