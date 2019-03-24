@@ -1,19 +1,7 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'org.greenrobot.greendao'
+apply plugin: 'org.greenrobot.greendao'
 
-static def gitSha() {
-    return 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
-}
-
-static def currentDate() {
-    return new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC"))
-}
-
-static def currentTime() {
-    return new Date().format("yyyy-MM-dd'T'HH:mm:ss'Z'", TimeZone.getTimeZone("UTC"))
-}
-
-def APP_NAME = "Formwork"
+def APP_NAME = "formwork-project-android"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -58,6 +46,9 @@ android {
         dev {
             applicationIdSuffix ".dev"
         }
+
+        dtest {
+        }
     }
 
     buildTypes {
@@ -67,8 +58,6 @@ android {
             shrinkResources false
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField "boolean", "IS_RELEASE", "false"
         }
 
         release {
@@ -77,27 +66,27 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
-            buildConfigField "boolean", "IS_RELEASE", "true"
         }
     }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "app-${variant.flavorName}-${variant.buildType.name}.apk"
+            def now = new Date().format("yyyy-MM-dd", TimeZone.getTimeZone("UTC+8"))
+            outputFileName = "app-${variant.buildType.name}-v${versionName}-${variant.flavorName}-${now}.apk"
         }
 
         buildConfigField "boolean", "IS_DEV", "${(variant.flavorName == "dev")}"
+        buildConfigField "boolean", "IS_TEST", "${(variant.flavorName == "test")}"
 
         switch (variant.flavorName) {
             case "dev":
-            case "dpub":
-                resValue "string", "app_name", "${APP_NAME}(D${variant.flavorName.substring(1)})"
+            case "test":
+                resValue "string", "app_name", "${APP_NAME}(${variant.flavorName})"
                 buildConfigField "boolean", "IS_DEBUGGABLE", "true"
                 break
             default:
                 if (variant.buildType.name == "debug") {
-                    resValue "string", "app_name", "${APP_NAME}(Debug)"
+                    resValue "string", "app_name", "${APP_NAME}(debug)"
                     buildConfigField "boolean", "IS_DEBUGGABLE", "true"
                 } else {
                     buildConfigField "boolean", "IS_DEBUGGABLE", "false"
@@ -113,11 +102,11 @@ android {
     }
 }
 
-//greendao {
-//    schemaVersion 2
-//    daoPackage '${applicationId}.database.dao'
-//    targetGenDir 'src/main/java'
-//}
+greendao {
+    schemaVersion 0
+    daoPackage '${applicationId}.database.dao'
+    targetGenDir 'src/main/java'
+}
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -132,12 +121,12 @@ dependencies {
     implementation project(':lib-util')
     implementation project(':lib-widget')
 
-    // 开发工具
+    // 开发基础工具
+    implementation 'org.greenrobot:greendao:3.2.0'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     // 其他
-//    implementation dep.greendao
 
     // testImplementation 'junit:junit:4.12'
     // androidTestImplementation 'com.android.support.test:runner:1.0.2'
