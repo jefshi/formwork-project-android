@@ -104,7 +104,7 @@ android {
 
 greendao {
     schemaVersion 0
-    daoPackage '${applicationId}.database.dao'
+    daoPackage "${android.defaultConfig.applicationId}.database.dao"
     targetGenDir 'src/main/java'
 }
 
@@ -116,13 +116,14 @@ dependencies {
     implementation dep.support_recyclerview_v7
 
     // google
+    implementation 'com.google.code.gson:gson:2.8.5'
 
     // library
     implementation project(':lib-util')
     implementation project(':lib-widget')
 
     // 开发基础工具
-    implementation 'org.greenrobot:greendao:3.2.0'
+    implementation 'org.greenrobot:greendao:3.2.2'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 

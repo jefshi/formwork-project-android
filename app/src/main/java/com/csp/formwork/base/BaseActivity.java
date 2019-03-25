@@ -1,7 +1,25 @@
 package com.csp.formwork.base;
 
 
-import com.csp.libwidget.LibraryActivity;
+import android.os.Bundle;
 
-public abstract class BaseActivity extends LibraryActivity {
+import com.csp.libwidget.base.LibActivity;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
+public abstract class BaseActivity extends LibActivity {
+
+    Unbinder unbinder;
+
+    @Override
+    protected void beforeInit() {
+        unbinder = ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
 }

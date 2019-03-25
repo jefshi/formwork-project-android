@@ -1,14 +1,11 @@
-package com.csp.formwork;
+package com.csp.libwidget.base;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 
-/**
- * Application
- * Created by csp on 2018/7/9 009.
- */
-public class App extends Application {
+
+public class LibApplication extends Application {
     @SuppressLint("StaticFieldLeak")
     private static Context sContext;
 
